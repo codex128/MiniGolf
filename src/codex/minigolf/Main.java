@@ -6,8 +6,8 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
@@ -51,7 +51,7 @@ public class Main extends SimpleApplication implements AnalogFunctionListener, S
 		Functions.initialize(im);
 		
 		bulletapp = new BulletAppState();
-		//bulletapp.setDebugEnabled(true);
+		bulletapp.setDebugEnabled(true);
 		stateManager.attach(bulletapp);
 		
 		ball = new RigidBodyControl(1f);
@@ -64,7 +64,7 @@ public class Main extends SimpleApplication implements AnalogFunctionListener, S
 		rootNode.attachChild(b);
 		ball.setDamping(.4f, .3f);
 		ball.setRestitution(1f);
-		//ball.setSleepingThresholds(2f, 2f);
+		ball.setSleepingThresholds(2f, 2f);
 		
 		camera = new OrbitalCamera(cam, im);
 		camera.getDistanceDomain().set(10f, 15f);
@@ -88,6 +88,11 @@ public class Main extends SimpleApplication implements AnalogFunctionListener, S
 			}
 		}
 		rootNode.attachChild(hole);
+		Material scenemat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+		//scenemat.setTexture("DiffuseMap", assetManager.loadTexture("Textures/green unit.png"));
+		scenemat.setBoolean("UseMaterialColors", true);
+		scenemat.setColor("Diffuse", ColorRGBA.Gray);
+		hole.setMaterial(scenemat);
 		
 		camLight = new CameraLight(cam);
 		rootNode.addLight(camLight);
@@ -105,7 +110,7 @@ public class Main extends SimpleApplication implements AnalogFunctionListener, S
 		if (ball.getPhysicsLocation().y < -10f) {
 			setBallLocation(lastputt);
 		}
-		if (ball.getPhysicsLocation().distance(endlocation) < .5f) {
+		if (ball.getPhysicsLocation().distance(endlocation) < 1f) {
 			System.out.println("you win!");
 		}
 		camLight.update(tpf);
